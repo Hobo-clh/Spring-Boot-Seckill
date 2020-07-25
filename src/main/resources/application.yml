@@ -1,0 +1,40 @@
+# 开启 mybatis 驼峰标识
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.clh.seckill.mapper
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/hobo-seckill?serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    # 需了解
+#    filters: stat
+#    maxActive: 2
+#    initialSize: 1
+#    maxWait: 60000
+#    minIdle: 1
+#    timeBetweenEvictionRunsMillis: 60000
+#    minEvictableIdleTimeMillis: 300000
+#    validationQuery: select 'x'
+#    testWhileIdle: true
+#    testOnBorrow: false
+#    testOnReturn: false
+#    poolPreparedStatements: true
+#    maxOpenPreparedStatements: 20
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
+redis:
+  host: 192.168.43.248
+  port: 6379
+  timeout: 10
+#  password: 123456
+  poolMaxTotal: 1000
+  poolMaxIdle: 500
+  poolMaxWait: 3
