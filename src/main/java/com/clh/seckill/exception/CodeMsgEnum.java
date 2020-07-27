@@ -20,14 +20,14 @@ public enum CodeMsgEnum {
     PASSWORD_ERROR(500304,"密码错误"),
     MOBILE_NOT_EXIST(500305,"手机号不存在"),
     BIND_ERROR(500306,"绑定异常"),
-
     MOBILE_IS_NOT_EXIST(500307,"手机号码不存在"),
-
+    USER_IS_EMPTY(500308,"请登录后执行此操作"),
     //商品模块 400xx
 
     //订单模块 500xx
     SECKILL_STOCK_EMPTY(500500,"库存不足"),
     SECKILL_REPEAT(5000501,"重复秒杀"),
+    ORDER_IS_EMPTY(5000502,"不存在此订单"),
     ;
 
 

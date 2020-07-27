@@ -20,12 +20,10 @@ public class GlobleExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
     public ResultDTO<String> exceptionHandler(HttpServletRequest request,Exception e){
-
         if (e instanceof GlobleException) {
             GlobleException e1 = (GlobleException) e;
             CodeMsgEnum codeMsg = e1.getCodeMsg();
             return ResultDTO.error(codeMsg);
-
         }else if (e instanceof BindException) {
             BindException ex = (BindException) e;
             List<ObjectError> errors = ex.getAllErrors();

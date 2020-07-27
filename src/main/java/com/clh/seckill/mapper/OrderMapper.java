@@ -22,4 +22,8 @@ public interface OrderMapper {
 
     @Insert("insert into order_seckill (user_id, goods_id, order_id)values(#{userId}, #{goodsId}, #{orderId})")
     int insertSeckillOrder(SeckillOrder seckillOrder);
+
+    @Select("select * from order_info where id = #{id}")
+    OrderInfo getOrderById(Long id);
+
 }

@@ -58,6 +58,12 @@ public class OrderService {
         seckillOrder.setOrderId(orderId);
         seckillOrder.setUserId(user.getId());
         orderMapper.insertSeckillOrder(seckillOrder);
+        //放入缓存中
+        redisService.set(SecKillOrderKey.getUIdGoodsId, user.getId() + ""+ goods.getId(), seckillOrder);
         return orderInfo;
+    }
+
+    public OrderInfo getOrderById(Long id) {
+        return orderMapper.getOrderById(id);
     }
 }

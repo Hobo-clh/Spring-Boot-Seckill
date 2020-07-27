@@ -1,0 +1,140 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>订单详情</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <!-- jquery -->
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <!-- bootstrap -->
+    <link rel="stylesheet" type="text/css" href="/bootstrap/css/bootstrap.min.css"/>
+    <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
+    <!-- jquery-validator -->
+    <script type="text/javascript" src="/jquery-validation/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="/jquery-validation/localization/messages_zh.min.js"></script>
+    <!-- layer -->
+    <script type="text/javascript" src="/layer/layer.js"></script>
+    <!-- md5.js -->
+    <script type="text/javascript" src="/js/md5.min.js"></script>
+    <!-- common.js -->
+    <script type="text/javascript" src="/js/common.js"></script>
+</head>
+<body>
+<div class="panel panel-default">
+    <div class="panel-heading">秒杀订单详情</div>
+    <table class="table" id="goodsList">
+        <tr>
+            <td>商品名称</td>
+            <td id="goodsName" colspan="3"></td>
+        </tr>
+        <tr>
+            <td>商品图片</td>
+            <td colspan="2"><img id="goodsImg" width="200" height="200"/></td>
+        </tr>
+        <tr>
+            <td>订单价格</td>
+            <td colspan="2" id="goodsPrice"></td>
+        </tr>
+        <tr>
+            <td>下单时间</td>
+            <td id="createDate" colspan="2"></td>
+        </tr>
+        <tr>
+            <td>订单状态</td>
+            <td>
+                <span id="status"></span>
+                <!--                <span>待发货</span>-->
+                <!--                <span>已发货</span>-->
+                <!--                <span>已收货</span>-->
+                <!--                <span>已退款</span>-->
+                <!--                <span>已完成</span>-->
+            </td>
+            <td>
+                <button class="btn btn-primary btn-block" type="submit" id="payButton">立即支付</button>
+            </td>
+        </tr>
+        <tr>
+            <td>收货人</td>
+            <td colspan="2" id="userId"></td>
+        </tr>
+        <tr>
+            <td>收货地址</td>
+            <td colspan="2">北京市昌平区回龙观龙博一区</td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
+
+<script type="application/javascript">
+    $(function () {
+        getOrderInform();
+    });
+
+    function getOrderInform() {
+        //获取订单信息
+        let orderId = g_getQueryString("orderId");
+        if (orderId === null || orderId === "") {
+            alert("出现了一点小问题！")
+            return;
+        }
+        $.ajax({
+            url: "/order/detail/" + orderId,
+            type: "GET",
+            success: function (data) {
+                if (data.code === 200) {
+                    renderOrder(data.data);
+                } else {
+                    console.log(data);
+                    alert(data.msg);
+                }
+            },
+            error: function () {
+                alert("出现了一点问题请稍后再尝试");
+            }
+        })
+    }
+
+    function renderOrder(orderDetail) {
+        let goods = orderDetail.goodsExtend;
+        let orderInfo = orderDetail.orderInfo;
+        let user = orderDetail.user;
+        console.log(goods);
+        console.log(orderInfo);
+        console.log(user);
+
+        let goodsName = goods.goodName;
+        let goodsImg = goods.goodsImg;
+        let goodsPrice = goods.goodsPrice;
+        let createDate = orderInfo.createDate;
+        let status = orderInfo.status;
+        let userId = user.id;
+        //复制
+        $("#goodsName").text(goodsName);
+        $("#goodsImg").attr("src", goodsImg);
+        $("#goodsPrice").text(goodsPrice);
+        $("#createDate").text(new Date(createDate).format("yyyy-MM-dd hh:mm:ss"));
+        $("#userId").text(userId);
+        if (status == 0) {
+            $("#status").text("未付款");
+
+        } else if (status == 1) {
+            $("#status").text("待发货");
+
+        } else if (status == 2) {
+            $("#status").text("已发货");
+
+        } else if (status == 3) {
+            $("#status").text("已收货");
+        } else if (status == 4) {
+            $("#status").text("已退款");
+        } else {
+            $("#status").text("已完成");
+        }
+        ;
+
+
+
+
+
+    }
+</script>

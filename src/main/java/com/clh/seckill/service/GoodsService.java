@@ -1,7 +1,6 @@
 package com.clh.seckill.service;
 
 import com.clh.seckill.mapper.GoodsMapper;
-import com.clh.seckill.model.Goods;
 import com.clh.seckill.model.GoodsExtend;
 import com.clh.seckill.model.SeckillGoods;
 import com.clh.seckill.redis.GoodsKey;
@@ -46,11 +45,10 @@ public class GoodsService {
         return dbGoodsExtend;
     }
 
-    public void reduceStock(GoodsExtend g) {
+    public int reduceStock(GoodsExtend g) {
         SeckillGoods seckillGoods = new SeckillGoods();
         seckillGoods.setGoodsId(g.getId());
         seckillGoods.setStockCount(g.getStockCount());
-        int i = goodsMapper.reduceStock(seckillGoods);
-        System.out.println(i);
+        return goodsMapper.reduceStock(seckillGoods);
     }
 }

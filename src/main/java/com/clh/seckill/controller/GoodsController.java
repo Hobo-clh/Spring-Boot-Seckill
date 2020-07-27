@@ -122,6 +122,12 @@ public class GoodsController {
         return html;
     }
 
+    /**
+     * 优化后的商品详情业
+     * @param user
+     * @param goodsId
+     * @return
+     */
     @GetMapping(value = "/goods/detail/{goodsId}")
     @ResponseBody
     public ResultDTO detail2(User user, @PathVariable("goodsId") long goodsId) {

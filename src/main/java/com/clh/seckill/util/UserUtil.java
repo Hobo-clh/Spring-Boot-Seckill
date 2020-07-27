@@ -7,9 +7,6 @@ import com.clh.seckill.model.User;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,24 +31,24 @@ public class UserUtil {
             users.add(user);
         }
         System.out.println("create user");
-		// 插入数据库
-		Connection conn = DBUtil.getConn();
-		String sql = "insert into user(login_count, nickname, register_date, salt, password, id)values(?,?,?,?,?,?)";
-		PreparedStatement pstmt = conn.prepareStatement(sql);
-		for(int i=0;i<users.size();i++) {
-            User user = users.get(i);
-			pstmt.setInt(1, user.getLoginCount());
-			pstmt.setString(2, user.getNickname());
-			pstmt.setTimestamp(3, new Timestamp(user.getRegisterDate().getTime()));
-			pstmt.setString(4, user.getSalt());
-			pstmt.setString(5, user.getPassword());
-			pstmt.setLong(6, user.getId());
-			pstmt.addBatch();
-		}
-		pstmt.executeBatch();
-		pstmt.close();
-		conn.close();
-		System.out.println("insert to db");
+		// // 插入数据库
+		// Connection conn = DBUtil.getConn();
+		// String sql = "insert into user(login_count, nickname, register_date, salt, password, id)values(?,?,?,?,?,?)";
+		// PreparedStatement pstmt = conn.prepareStatement(sql);
+		// for(int i=0;i<users.size();i++) {
+        //     User user = users.get(i);
+		// 	pstmt.setInt(1, user.getLoginCount());
+		// 	pstmt.setString(2, user.getNickname());
+		// 	pstmt.setTimestamp(3, new Timestamp(user.getRegisterDate().getTime()));
+		// 	pstmt.setString(4, user.getSalt());
+		// 	pstmt.setString(5, user.getPassword());
+		// 	pstmt.setLong(6, user.getId());
+		// 	pstmt.addBatch();
+		// }
+		// pstmt.executeBatch();
+		// pstmt.close();
+		// conn.close();
+		// System.out.println("insert to db");
         //登录，生成token
         String urlString = "http://localhost:8080/login";
         File file = new File("D:/tokens.txt");
