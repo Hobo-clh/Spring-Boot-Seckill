@@ -1,4 +1,4 @@
-package com.clh.seckill.util;
+package com.clh.seckill.zother;
 
 import java.io.InputStream;
 import java.sql.Connection;

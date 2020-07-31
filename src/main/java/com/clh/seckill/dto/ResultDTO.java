@@ -12,7 +12,7 @@ public class ResultDTO<T> {
 
     private Integer code;
     private String msg;
-    private T Data;
+    private T data;
 
     private ResultDTO(CodeMsgEnum codeMsg) {
         this.code = codeMsg.getCode();

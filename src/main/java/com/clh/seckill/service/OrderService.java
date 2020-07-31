@@ -51,11 +51,13 @@ public class OrderService {
         orderInfo.setOrderChannel(1);
         orderInfo.setStatus(0);
         orderInfo.setUserId(user.getId());
-        Long orderId = orderMapper.insert(orderInfo);
+        // Long orderId = orderMapper.insert(orderInfo);
+        //会返回在orderInfo中
+        orderMapper.insert(orderInfo);
 
         SeckillOrder seckillOrder = new SeckillOrder();
         seckillOrder.setGoodsId(goods.getId());
-        seckillOrder.setOrderId(orderId);
+        seckillOrder.setOrderId(orderInfo.getId());
         seckillOrder.setUserId(user.getId());
         orderMapper.insertSeckillOrder(seckillOrder);
         //放入缓存中

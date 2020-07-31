@@ -1,40 +1,74 @@
 # 开启 mybatis 驼峰标识
 mybatis:
-  configuration:
-    map-underscore-to-camel-case: true
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.clh.seckill.mapper
+  configuration:
+    map-underscore-to-camel-case: true
 spring:
+  # ----数据源配置----
   datasource:
-    url: jdbc:mysql://localhost:3306/hobo-seckill?serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://localhost:3306/hobo-seckill?serverTimezone=UTC
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
-    # 需了解
-#    filters: stat
-#    maxActive: 2
-#    initialSize: 1
-#    maxWait: 60000
-#    minIdle: 1
-#    timeBetweenEvictionRunsMillis: 60000
-#    minEvictableIdleTimeMillis: 300000
-#    validationQuery: select 'x'
-#    testWhileIdle: true
-#    testOnBorrow: false
-#    testOnReturn: false
-#    poolPreparedStatements: true
-#    maxOpenPreparedStatements: 20
+    # ----下面为连接池的补充设置，应用到上面所有数据源中----
+    # 初始化大小，最小，最大
+    initialSize: 5
+    minIdle: 1
+    maxActive: 50
+    # 配置获取连接等待超时的时间
+    maxWait: 60000
+    # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+    timeBetweenEvictionRunsMillis: 60000
+    # 配置一个连接在池中最小生存的时间，单位是毫秒
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: false
+    testOnBorrow: false
+    testOnReturn: false
+    # 打开PSCache，并且指定每个连接上PSCache的大小
+    poolPreparedStatements: true
+    #spring.datasource.maxPoolPreparedStatementPerConnectionSize: 20
+    # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+    #spring.datasource.filters: stat,wall,log4j
+    # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+    filters: stat
+    maxOpenPreparedStatements: 20
+    # 合并多个DruidDataSource的监控数据
+    #spring.datasource.useGlobalDataSourceStat: true
+
+  #-----Rabbitmq配置-----
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+    listener.simple.concurrency:  10
+    listener.simple.max-concurrency:  10
+    listener.simple.prefetch:
+    listener.simple.auto-startup: true
+    listener.simple.default-requeue-rejected:  true
+    template.retry.enabled: true
+    template.retry.initial-interval: 1000
+    template.retry.max-attempts: 3
+    template.retry.max-interval: 10000
+    template.retry.multiplier: 1.0
+  # ----开启mvc接收restful风格的请求----
   mvc:
     hiddenmethod:
       filter:
         enabled: true
 
+# ----Redis配置----
 redis:
-  host: 192.168.98.248
+  host: 192.168.16.248
+  # host: localhost
   port: 6379
   timeout: 10
-#  password: 123456
+  # password: 123456
   poolMaxTotal: 1000
   poolMaxIdle: 500
   poolMaxWait: 3

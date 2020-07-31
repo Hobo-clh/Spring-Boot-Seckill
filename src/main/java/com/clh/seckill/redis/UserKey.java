@@ -6,7 +6,7 @@ package com.clh.seckill.redis;
  **/
 public class UserKey extends BasePrefix {
 
-    public static final int TOKEN_EXPIRE = 60 * 60 * 24 * 2;
+    public static final int TOKEN_EXPIRE = 60 * 60 * 24 * 30;
 
     private UserKey(int expireSeconds,String prefix) {
         super(expireSeconds,prefix);

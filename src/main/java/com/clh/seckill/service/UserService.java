@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 
 /**
  * @author: LongHua
@@ -60,16 +62,12 @@ public class UserService {
 
     /**
      * 更改用户密码
-     * @param token
-     * @param id
-     * @param passwordNew
-     * @return
      */
     public boolean updatePwd(String token, Long id, String passwordNew) {
         //取缓存
         User user = redisService.get(UserKey.getById, String.valueOf(id), User.class);
         if (user == null) {
-            throw new GlobleException(CodeMsgEnum.MOBILE_NOT_EXIST);
+            throw new GlobleException(CodeMsgEnum.MOBILE_IS_NOT_EXIST);
         }
         //缓存中没有就取数据库
         User toBeUpdate = new User();
@@ -94,7 +92,7 @@ public class UserService {
         //
         User user = findById(Long.parseLong(mobile));
         if (user == null) {
-            throw new GlobleException(CodeMsgEnum.MOBILE_NOT_EXIST);
+            throw new GlobleException(CodeMsgEnum.MOBILE_IS_NOT_EXIST);
         }
         String calPass = MD5Util.formPassToDBPass(password, user.getSalt());
         if (!calPass.equals(user.getPassword())) {
@@ -119,5 +117,46 @@ public class UserService {
         //设置后 cookie可以在同一应用服务器内共享
         cookie.setPath("/");
         response.addCookie(cookie);
+    }
+
+    public User getUser(HttpServletRequest request, HttpServletResponse response) {
+        String paramToken = request.getParameter(COOKIE_NAME_TOKEN);
+        String cookieToken = getCookieValue(COOKIE_NAME_TOKEN, request);
+        if (StringUtils.isEmpty(cookieToken) && StringUtils.isEmpty(paramToken)) {
+            return null;
+        }
+        String token = StringUtils.isEmpty(paramToken) ? cookieToken : paramToken;
+        return getByToken(token, response);
+    }
+
+    private String getCookieValue(String cookieName, HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies == null || cookies.length == 0) {
+            return null;
+        }
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals(cookieName)) {
+                return cookie.getValue();
+            }
+        }
+        return null;
+    }
+
+    public boolean register(UserDTO userDTO) {
+        if (userDTO == null) {
+            throw new GlobleException(CodeMsgEnum.SERVER_ERROR);
+        }
+        String mobile = userDTO.getMobile();
+        String password = userDTO.getPassword();
+        String salt = UUIDUtil.uuid();
+        String calPass = MD5Util.formPassToDBPass(password, salt);
+        User user = User.builder()
+                .id(Long.parseLong(mobile))
+                .password(calPass)
+                .registerDate(new Date())
+                .salt(salt)
+                .build();
+        Integer i = userMapper.insert(user);
+        return i > 0;
     }
 }

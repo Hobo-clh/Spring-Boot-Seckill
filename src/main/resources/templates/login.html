@@ -19,10 +19,6 @@
     <script type="text/javascript" th:src="@{/js/common.js}"></script>
 </head>
 <body>
-<form action="/put" method="post">
-    <input type="hidden" name="_method" value="put">
-    <button>提交</button>
-</form>
 
 <form name="loginForm" id="loginForm" method="post" style="width:50%; margin:0 auto">
 
@@ -58,6 +54,7 @@
             <button class="btn btn-primary btn-block" type="submit" onclick="login()">登录</button>
         </div>
     </div>
+    <div style="margin: 14px 0 100px 335px;cursor: pointer"><a href="/register">前往注册</a></div>
 
 </form>
 </body>
@@ -65,7 +62,7 @@
 <script>
     function login() {
         $("#loginForm").validate({
-            submitHandler: function (form) {
+            submitHandler: function () {
                 doLogin();
             }
         });

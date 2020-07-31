@@ -1,5 +1,6 @@
 package com.clh.seckill.controller;
 
+import com.clh.seckill.access.AccessLimit;
 import com.clh.seckill.dto.GoodsDetailDTO;
 import com.clh.seckill.dto.ResultDTO;
 import com.clh.seckill.model.GoodsExtend;
@@ -39,20 +40,12 @@ public class GoodsController {
     private ThymeleafViewResolver resolver;
 
     /**
-     * <p>
-     * 本机  QPS 1215     升级页面缓存后 本机 QPS：2645
-     * 500 * 10s
-     * <p>
-     * QPS 2669
-     * 1000 * 10s
-     * <p>
-     * QPS 1664
-     * 5000 * 10s
      *
      * @param model
      * @param user
      * @return
      */
+    @AccessLimit(seconds = 60, maxCount = 2000, needLogin = false)
     @GetMapping(value = "/goods_list", produces = "text/html")
     @ResponseBody
     public String goodsPage(HttpServletRequest request,
@@ -78,59 +71,18 @@ public class GoodsController {
         return html;
     }
 
-    @GetMapping(value = "/to_detail/{goodsId}", produces = "text/html")
-    @ResponseBody
-    public String detail(HttpServletRequest request,
-                         HttpServletResponse response,
-                         Model model, User user,
-                         @PathVariable("goodsId") long goodsId) {
-        model.addAttribute("user", user);
-
-        GoodsExtend goodsExtend = goodsService.getGoodsExtendByGoodsId(goodsId);
-        model.addAttribute("goods", goodsExtend);
-
-        long startAt = goodsExtend.getStartDate().getTime();
-        long endAt = goodsExtend.getEndDate().getTime();
-        long now = System.currentTimeMillis();
-
-        int miaoshaStatus = 0;
-        int remainSeconds = 0;
-        if (now < startAt) {
-            //秒杀还没开始，倒计时
-            miaoshaStatus = 0;
-            remainSeconds = (int) ((startAt - now) / 1000);
-
-        } else if (now > endAt) {
-            //秒杀已经结束
-            miaoshaStatus = 2;
-            remainSeconds = -1;
-        } else {//秒杀进行中
-            miaoshaStatus = 1;
-            remainSeconds = 0;
-        }
-        model.addAttribute("seckillStatus", miaoshaStatus);
-        model.addAttribute("remainSeconds", remainSeconds);
-
-        String html = redisService.get(GoodsKey.getGoodsDetail, String.valueOf(goodsId), String.class);
-        if (StringUtils.isNotEmpty(html)) {
-            return html;
-        }
-        WebContext context = new WebContext(request, response,
-                request.getServletContext(), request.getLocale(), model.asMap());
-        html = resolver.getTemplateEngine().process("goods_detail", context);
-        redisService.set(GoodsKey.getGoodsDetail, String.valueOf(goodsId), html);
-        return html;
-    }
 
     /**
      * 优化后的商品详情业
+     *
      * @param user
      * @param goodsId
      * @return
      */
+    @AccessLimit(seconds = 20, maxCount = 10, needLogin = false)
     @GetMapping(value = "/goods/detail/{goodsId}")
     @ResponseBody
-    public ResultDTO detail2(User user, @PathVariable("goodsId") long goodsId) {
+    public ResultDTO goodsDetail(User user, @PathVariable("goodsId") long goodsId) {
         GoodsExtend goodsExtend = goodsService.getGoodsExtendByGoodsId(goodsId);
         long startAt = goodsExtend.getStartDate().getTime();
         long endAt = goodsExtend.getEndDate().getTime();
@@ -143,7 +95,6 @@ public class GoodsController {
             //秒杀还没开始，倒计时
             seckillStatus = 0;
             remainSeconds = (int) ((startAt - now) / 1000);
-
         } else if (now > endAt) {
             //秒杀已经结束
             seckillStatus = 2;
@@ -152,8 +103,6 @@ public class GoodsController {
             seckillStatus = 1;
             remainSeconds = 0;
         }
-
-
         GoodsDetailDTO detailDTO = GoodsDetailDTO.builder()
                 .user(user)
                 .goodsExtend(goodsExtend)

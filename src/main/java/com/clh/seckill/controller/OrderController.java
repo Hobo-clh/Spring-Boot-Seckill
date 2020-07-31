@@ -1,5 +1,6 @@
 package com.clh.seckill.controller;
 
+import com.clh.seckill.access.AccessLimit;
 import com.clh.seckill.cache.MapCache;
 import com.clh.seckill.dto.OrderDetailDTO;
 import com.clh.seckill.dto.ResultDTO;
@@ -9,7 +10,6 @@ import com.clh.seckill.model.OrderInfo;
 import com.clh.seckill.model.User;
 import com.clh.seckill.service.GoodsService;
 import com.clh.seckill.service.OrderService;
-import com.clh.seckill.validator.NeedLogin;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,14 +31,11 @@ public class OrderController {
     @Resource
     private GoodsService goodsService;
 
+    @AccessLimit(seconds = 10,maxCount = 5)
     @GetMapping("/detail/{orderId}")
     @ResponseBody
-    @NeedLogin
     public ResultDTO getSeckillOrderById(@PathVariable("orderId") Long id,
                                          User user){
-        if (user == null) {
-            return ResultDTO.error(CodeMsgEnum.USER_IS_EMPTY);
-        }
         //先从缓存中查找
         OrderDetailDTO orderDetailDTO = MapCache.cacheMap.get(id);
         //查找到直接返回

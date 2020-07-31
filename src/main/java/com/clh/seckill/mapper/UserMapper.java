@@ -1,6 +1,7 @@
 package com.clh.seckill.mapper;
 
 import com.clh.seckill.model.User;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -21,4 +22,7 @@ public interface UserMapper {
 
     @Update("update user set password = #{password} where id = #{id}")
     User updatePwd(User toBeUpdate);
+
+    @Insert("insert into user(id,password,salt,register_date) values(#{id},#{password},#{salt},#{registerDate})")
+    Integer insert(User user);
 }

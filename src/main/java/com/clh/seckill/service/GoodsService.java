@@ -45,10 +45,9 @@ public class GoodsService {
         return dbGoodsExtend;
     }
 
-    public int reduceStock(GoodsExtend g) {
+    public boolean reduceStock(GoodsExtend g) {
         SeckillGoods seckillGoods = new SeckillGoods();
         seckillGoods.setGoodsId(g.getId());
-        seckillGoods.setStockCount(g.getStockCount());
-        return goodsMapper.reduceStock(seckillGoods);
+        return goodsMapper.reduceStock(seckillGoods)>0;
     }
 }
