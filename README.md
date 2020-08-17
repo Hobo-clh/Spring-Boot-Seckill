@@ -96,11 +96,11 @@
 
 
 
-### PQS记录
+### QPS记录
 
 |                          | 5000 * 10s |
 | ------------------------ | ---------- |
-| do_seckill               | QPS：390/  |
+| do_seckill               | QPS：390  |
 | redis优化版本 do_seckill | QPS：850   |
 | 异步下单版本  do_seckill | QPS：1390  |
 
