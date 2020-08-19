@@ -7,9 +7,9 @@ mybatis:
 spring:
   # ----数据源配置----
   datasource:
-    url: jdbc:mysql://localhost:3306/hobo-seckill?serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/hobo-seckill?serverTimezone=Asia/Shanghai&useAffectedRows=true
     username: root
-    password: 123456
+    password:
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     # ----下面为连接池的补充设置，应用到上面所有数据源中----
@@ -61,14 +61,33 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
-
+  # -----配置邮箱----------------
+  mail:
+    host: smtp.qq.com
+    username: longhuahobo@foxmail.com
+    password:
+    port: 465
+    properties:
+      mail:
+        # SMTP服务
+        smtp:
+          ssl:
+            enable: true
+          auth: true
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+            port: 465
 # ----Redis配置----
 redis:
-  host: 192.168.16.248
-  # host: localhost
+  #  host: 192.168.16.248
+  host: localhost
   port: 6379
   timeout: 10
   # password: 123456
   poolMaxTotal: 1000
   poolMaxIdle: 500
   poolMaxWait: 3
+
+# 自定义变量
+customize:
+  sender: longhuahobo@foxmail.com

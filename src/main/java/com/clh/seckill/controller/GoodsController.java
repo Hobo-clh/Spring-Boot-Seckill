@@ -8,20 +8,17 @@ import com.clh.seckill.model.User;
 import com.clh.seckill.redis.GoodsKey;
 import com.clh.seckill.service.GoodsService;
 import com.clh.seckill.service.RedisService;
+import com.clh.seckill.util.BeanUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.thymeleaf.context.IWebContext;
-import org.thymeleaf.context.WebContext;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -39,38 +36,58 @@ public class GoodsController {
     @Resource
     private ThymeleafViewResolver resolver;
 
-    /**
-     *
-     * @param model
-     * @param user
-     * @return
-     */
-    @AccessLimit(seconds = 60, maxCount = 2000, needLogin = false)
-    @GetMapping(value = "/goods_list", produces = "text/html")
-    @ResponseBody
-    public String goodsPage(HttpServletRequest request,
-                            HttpServletResponse response,
-                            Model model, User user) {
-        //从redis缓存中查询是否有页面缓存
-        //取缓存
-        String html = redisService.get(GoodsKey.getGoodsList, "", String.class);
-        if (StringUtils.isNotEmpty(html)) {
-            return html;
-        }
-        List<GoodsExtend> goodsExtendList = goodsService.listGoodsExtend();
-        model.addAttribute("goodsList", goodsExtendList);
-        model.addAttribute("user", user);
-        //手动渲染
-        IWebContext ctx = new WebContext(request, response,
-                request.getServletContext(), request.getLocale(), model.asMap());
-        html = resolver.getTemplateEngine().process("goods_list", ctx);
-        //放入缓存中
-        if (StringUtils.isNotEmpty(html)) {
-            redisService.set(GoodsKey.getGoodsList, "", html);
-        }
-        return html;
-    }
+    // /**
+    //  * 要把页面缓存换成物品缓存
+    //  *
+    //  * @param model
+    //  * @param user
+    //  * @return
+    //  */
+    // @AccessLimit(seconds = 60, maxCount = 2000, needLogin = false)
+    // @GetMapping(value = "/goods_list", produces = "text/html")
+    // @ResponseBody
+    // public String goodsPage(HttpServletRequest request,
+    //                         HttpServletResponse response,
+    //                         Model model, User user) {
+    //     //从redis缓存中查询是否有页面缓存
+    //     //取缓存
+    //     String html = redisService.get(GoodsKey.getGoodsList, "", String.class);
+    //     if (StringUtils.isNotEmpty(html)) {
+    //         return html;
+    //     }
+    //     List<GoodsExtend> goodsExtendList = goodsService.listGoodsExtend();
+    //     model.addAttribute("goodsList", goodsExtendList);
+    //     model.addAttribute("user", user);
+    //
+    //     //手动渲染
+    //     IWebContext ctx = new WebContext(request, response,
+    //             request.getServletContext(), request.getLocale(), model.asMap());
+    //     html = resolver.getTemplateEngine().process("goods_list", ctx);
+    //     //放入缓存中
+    //     if (StringUtils.isNotEmpty(html)) {
+    //         redisService.set(GoodsKey.getGoodsList, "", html);
+    //     }
+    //     return html;
+    // }
 
+
+    @AccessLimit(seconds = 60, maxCount = 2000, needLogin = false)
+    @GetMapping(value = "/goods_list")
+    public String goodsPage2(HttpServletRequest request,
+                             Model model) {
+        //取缓存
+        String list = redisService.get(GoodsKey.getGoodsList, "", String.class);
+        List<GoodsExtend> goodsExtends = BeanUtil.stringToList(list, GoodsExtend.class);
+        if (goodsExtends == null || goodsExtends.size() <= 0) {
+            goodsExtends = goodsService.listGoodsExtend();
+            //放入缓存中
+            if (goodsExtends.size() > 0) {
+                redisService.set(GoodsKey.getGoodsList, "", goodsExtends);
+            }
+        }
+        model.addAttribute("goodsList", goodsExtends);
+        return "goods_list";
+    }
 
     /**
      * 优化后的商品详情业

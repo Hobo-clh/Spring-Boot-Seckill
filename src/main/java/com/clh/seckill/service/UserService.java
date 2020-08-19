@@ -8,7 +8,9 @@ import com.clh.seckill.model.User;
 import com.clh.seckill.redis.UserKey;
 import com.clh.seckill.util.MD5Util;
 import com.clh.seckill.util.UUIDUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -21,6 +23,7 @@ import java.util.Date;
  * @author: LongHua
  * @date: 2020/7/18
  **/
+@Slf4j
 @Service
 public class UserService {
     public static final String COOKIE_NAME_TOKEN = "token";
@@ -82,14 +85,12 @@ public class UserService {
     }
 
 
-    public String login(UserDTO userDTO, HttpServletResponse response) {
-
+    public String login(UserDTO userDTO, HttpServletResponse response, HttpServletRequest request) {
         if (userDTO == null) {
             throw new GlobleException(CodeMsgEnum.SERVER_ERROR);
         }
         String mobile = userDTO.getMobile();
         String password = userDTO.getPassword();
-        //
         User user = findById(Long.parseLong(mobile));
         if (user == null) {
             throw new GlobleException(CodeMsgEnum.MOBILE_IS_NOT_EXIST);
@@ -100,15 +101,23 @@ public class UserService {
         }
         String token = UUIDUtil.uuid();
         addCookie(response, token, user);
+        user.setLastLoginDate(new Date());
+        user.setLoginCount(1);
+        try {
+            updateUser(user);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+        request.getSession().setAttribute("user", user);
         return token;
     }
 
     /**
      * 将token添加至cookie和redis中
      *
-     * @param response
+     * @param response 响应
      * @param token    用户标识符token
-     * @param user
+     * @param user     用户
      */
     public void addCookie(HttpServletResponse response, String token, User user) {
         redisService.set(UserKey.token, token, user);
@@ -159,4 +168,9 @@ public class UserService {
         Integer i = userMapper.insert(user);
         return i > 0;
     }
+
+    public boolean updateUser(User user) throws DuplicateKeyException {
+        return userMapper.updateUser(user) > 0;
+    }
+
 }

@@ -3,24 +3,14 @@
 <head>
     <meta charselogin.htmlt="UTF-8">
     <title>注册</title>
-    <!-- jquery -->
-    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
-    <!-- bootstrap -->
-    <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}"/>
-    <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
-    <!-- jquery-validator -->
-    <script type="text/javascript" th:src="@{/jquery-validation/jquery.validate.min.js}"></script>
-    <script type="text/javascript" th:src="@{/jquery-validation/localization/messages_zh.min.js}"></script>
-    <!-- layer -->
-    <script type="text/javascript" th:src="@{/layer/layer.js}"></script>
-    <!-- md5.js -->
-    <script type="text/javascript" th:src="@{/js/md5.min.js}"></script>
-    <!-- common.js -->
-    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+
+    <link rel="stylesheet" href="/css/loginRegister.css">
+    <div th:replace="common/import_bar::commom_improt"></div>
+
 </head>
 <body>
 
-<form name="registerForm" id="registerForm" method="post" style="width:50%; margin:0 auto">
+<form class="my-form" id="registerForm" method="post">
 
     <h2 style="text-align:center; margin-bottom: 20px">用户注册</h2>
 
@@ -64,7 +54,7 @@
             <button class="btn btn-primary btn-block" type="submit" onclick="register()">注册</button>
         </div>
     </div>
-    <div style="margin: 14px 0 100px 335px;"><a href="/login">前往登录</a></div>
+    <div class="a-jump-div"><a class="a-jump" href="/to_login">已有账号？前往登录</a></div>
 
 </form>
 </body>

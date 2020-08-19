@@ -1,0 +1,21 @@
+body {
+    background-image: url("/img/background/bg4.png");
+}
+
+.a-jump-div{
+    margin: 10px;
+}
+.a-jump{
+    color: #ffffff;
+    margin: 14px 0 100px 335px;
+    cursor: pointer;
+}
+
+.a-jump:hover {
+    color: #b4a9a9;
+    text-decoration: none;
+}
+.my-form {
+    width: 50%;
+    margin: 80px auto;
+}

@@ -1,5 +1,6 @@
 package com.clh.seckill.rabbitmq;
 
+import com.clh.seckill.dto.SeckillEmailDTO;
 import com.clh.seckill.dto.SeckillMessageDTO;
 import com.clh.seckill.util.BeanUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,12 @@ public class MQSender {
         String msg = BeanUtil.beanToString(messageDTO);
         log.info("send message: {}", msg);
         amqpTemplate.convertAndSend(MQConfig.SECKILL_QUEUE, msg);
+    }
+
+    public void sendEmail(SeckillEmailDTO seckillEmail) {
+        String msg = BeanUtil.beanToString(seckillEmail);
+        log.info("send message: {}", msg);
+        amqpTemplate.convertAndSend(MQConfig.EMAIL_QUEUE, msg);
     }
 
     // public void send(Object message) {

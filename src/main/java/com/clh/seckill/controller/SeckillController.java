@@ -2,6 +2,7 @@ package com.clh.seckill.controller;
 
 import com.clh.seckill.access.AccessLimit;
 import com.clh.seckill.dto.ResultDTO;
+import com.clh.seckill.dto.SeckillEmailDTO;
 import com.clh.seckill.dto.SeckillMessageDTO;
 import com.clh.seckill.exception.CodeMsgEnum;
 import com.clh.seckill.model.GoodsExtend;
@@ -155,6 +156,9 @@ public class SeckillController implements InitializingBean {
         //入队
         SeckillMessageDTO messageDTO = new SeckillMessageDTO(user, goodsId);
         sender.sendSeckillMessage(messageDTO);
+        if (user.getEmail() != null) {
+            sender.sendEmail(new SeckillEmailDTO(user.getEmail(), goodsId));
+        }
         //排队中
         return ResultDTO.success(0);
     }

@@ -4,8 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <title>秒杀失败</title>
+    <div th:replace="common/import_bar::commom_improt"></div>
 </head>
 <body>
+<div th:replace="common/top_bar::top-bar"></div>
 <h2>秒杀失败</h2>
 <h3 th:text="${errorMsg}"></h3>
 </body>

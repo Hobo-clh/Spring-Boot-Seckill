@@ -20,28 +20,32 @@ import java.util.Map;
 public class MQConfig {
     public static final String SECKILL_QUEUE = "seckill.queue";
 
-    public static final String QUEUE = "queue";
+    public static final String EMAIL_QUEUE = "email.queue";
 
+    @Bean
+    public Queue seckillQueue(){
+        return new Queue(SECKILL_QUEUE,true);
+    }
+    @Bean
+    public Queue emailQueue(){
+        return new Queue(EMAIL_QUEUE, true);
+    }
+
+
+    public static final String QUEUE = "queue";
     public static final String TOPIC_QUEUE1 = "topic.queue1";
+
     public static final String TOPIC_QUEUE2 = "topic.queue2";
 
     public static final String HEADER_QUEUE = "header.queue";
-
     /**通配符：# 表示0或者多个单词， * 表示1个 */
     public static final String ROUTING_KEY2 = "topic.#";
-    public static final String ROUTING_KEY1 = "topic.key1";
 
+    public static final String ROUTING_KEY1 = "topic.key1";
     public static final String TOPIC_EXCHANGE = "topicExchange";
     public static final String FANOUT_EXCHANGE = "fanoutExchange";
+
     public static final String HEADERS_EXCHANGE = "headersExchange";
-
-
-
-    @Bean
-    public Queue queue(){
-        return new Queue(SECKILL_QUEUE,true);
-    }
-
 
     /**
      * Direct模式 交换机Exchanger

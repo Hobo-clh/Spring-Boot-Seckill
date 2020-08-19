@@ -12,9 +12,9 @@ public class UserKey extends BasePrefix {
         super(expireSeconds,prefix);
     }
 
-
-
     public static UserKey getById = new UserKey(0,"id");
     public static UserKey getByName = new UserKey(TOKEN_EXPIRE,"name");
     public static UserKey token = new UserKey(TOKEN_EXPIRE,"token");
+
+    public static UserKey byEmail = new UserKey(5 * 60, "email");
 }

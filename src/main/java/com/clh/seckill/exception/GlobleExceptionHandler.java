@@ -30,7 +30,6 @@ public class GlobleExceptionHandler {
             ObjectError error = errors.get(0);
             String message = error.getDefaultMessage();
             return ResultDTO.error(CodeMsgEnum.BIND_ERROR,message);
-
         } else {
             return ResultDTO.error(CodeMsgEnum.SERVER_ERROR);
         }

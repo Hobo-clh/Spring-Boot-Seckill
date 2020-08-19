@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <div th:replace="common/import_bar::commom_improt"></div>
+</head>
+<body>
+<div th:replace="common/top_bar::top-bar"></div>
+<form class="form-inline" style="margin: 80px;">
+    <h3>绑定邮箱号</h3>
+    <h5>说明：如果绑定了邮箱，我们将第一时间把订单信息发送给您！</h5>
+    <div class="form-group">
+        <label for="email">邮箱号</label>
+        <input type="email" class="form-control" id="email" placeholder="Email">
+    </div>
+    <div class="form-group">
+        <label for="code">验证码</label>
+        <input type="text" class="form-control" id="code" placeholder="Password">
+        <input class="btn btn-default" type="button" onclick="getCode()" value="获取验证码" />
+    </div>
+    <br>
+    <input class="btn btn-default" type="button" style="margin: 20px 45px;" value="绑定邮箱" onclick="bindEmail()" />
+</form>
+</body>
+</html>
+<script>
+    function getCode() {
+        let email = $("#email").val();
+        if (email == null || email === "") {
+            layer.alert("邮箱不能为空");
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: "/send_email",
+            data: {
+                "email": email
+            },
+            success: function (data) {
+                if (data.code === 200) {
+                    layer.alert("邮件发送成功，注意查看邮件");
+                    //倒计时
+                } else {
+                    layer.alert(data.msg);
+                }
+            }
+        })
+    }
+
+    function bindEmail() {
+        let email = $("#email").val();
+        let code = $("#code").val();
+        if (email == null || email === "" || code === "" || code == null) {
+            layer.alert("邮箱或者验证码不能为空");
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: "verify_code",
+            data: {
+                "email": email,
+                "code": code
+            },
+            success: function (data) {
+                if (data.code === 200) {
+                    layer.alert("邮箱绑定成功");
+                    //倒计时
+                } else {
+                    layer.alert(data.msg);
+                }
+            }
+        })
+    }
+</script>

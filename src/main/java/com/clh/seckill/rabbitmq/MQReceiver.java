@@ -1,9 +1,11 @@
 package com.clh.seckill.rabbitmq;
 
+import com.clh.seckill.dto.SeckillEmailDTO;
 import com.clh.seckill.dto.SeckillMessageDTO;
 import com.clh.seckill.model.GoodsExtend;
 import com.clh.seckill.model.SeckillOrder;
 import com.clh.seckill.model.User;
+import com.clh.seckill.service.EmailService;
 import com.clh.seckill.service.GoodsService;
 import com.clh.seckill.service.OrderService;
 import com.clh.seckill.service.SeckillService;
@@ -28,6 +30,8 @@ public class MQReceiver {
     private OrderService orderService;
     @Resource
     private SeckillService seckillService;
+    @Resource
+    private EmailService emailService;
 
     @RabbitListener(queues = MQConfig.SECKILL_QUEUE)
     public void receiveSeckillMessage(String message) {
@@ -48,6 +52,26 @@ public class MQReceiver {
         }
         seckillService.toSeckill(user, goodsExtend);
     }
+
+    @RabbitListener(queues = MQConfig.EMAIL_QUEUE)
+    public void receiveEmail(String message) {
+        log.info("receive message: {}", message);
+        SeckillEmailDTO seckillEmailDTO = BeanUtil.stringToBean(message, SeckillEmailDTO.class);
+
+        //减库存 下订单
+        String email = seckillEmailDTO.getEmail();
+        Long goodsId = seckillEmailDTO.getGoodsId();
+
+        GoodsExtend goodsExtend = goodsService.getGoodsExtendByGoodsId(goodsId);
+        Integer stockCount = goodsExtend.getStockCount();
+        if (stockCount <= 0) {
+            return;
+        }
+        emailService.sendSeckillSucess(email,goodsExtend);
+    }
+
+
+
 
     // @RabbitListener(queues = MQConfig.QUEUE)
     // public void receive(String message) {

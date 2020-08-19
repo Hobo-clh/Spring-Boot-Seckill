@@ -1,13 +1,16 @@
 package com.clh.seckill.util;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
+import java.util.List;
 
 /**
  * @author: LongHua
  * @date: 2020/7/29
  **/
 public class BeanUtil {
-    public static  <T> String beanToString(T value) {
+    public static <T> String beanToString(T value) {
         if (value == null) {
             return null;
         }
@@ -37,5 +40,12 @@ public class BeanUtil {
         } else {
             return JSON.toJavaObject(JSON.parseObject(str), clazz);
         }
+    }
+
+    public static <T> List<T> stringToList(String strList, Class<T> clazz) {
+        if (strList == null || strList.length() <= 0 || clazz == null) {
+            return null;
+        }
+        return JSONObject.parseArray(strList, clazz);
     }
 }

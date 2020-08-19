@@ -23,12 +23,16 @@ public enum CodeMsgEnum {
     USER_IS_EMPTY(500308,"请登录后执行此操作"),
     USER_HAS_BEEN_REGISTERED(500309, "手机号已经被注册了！"),
 
-    //商品模块 400xx
 
-    //订单模块 500xx
-    SECKILL_STOCK_EMPTY(500500,"库存不足"),
-    SECKILL_REPEAT(5000501,"重复秒杀"),
-    ORDER_IS_EMPTY(5000502,"不存在此订单"),
+
+    //邮箱模块 5004xx
+    EMAIL_ERROR(500400,"邮箱错误"),
+    EMAIL_OR_CODE_EMPTY(500401,"邮箱或验证码不能为空"),
+    EMAIL_HAS_BEEN_USED(500402,"该邮箱已经被使用"),
+    //订单模块 5005xx
+    SECKILL_STOCK_EMPTY(50500,"库存不足"),
+    SECKILL_REPEAT(500501,"重复秒杀"),
+    ORDER_IS_EMPTY(500502,"不存在此订单"),
     REQUEST_ILLEGAL(500503, "请求非法"),
     SECKILL_FAIL(500504,"秒杀失败！"),
     VERIFY_CODE_IS_EMPTY(500505, "验证码不能为空！"),

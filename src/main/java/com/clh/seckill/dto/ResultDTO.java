@@ -24,6 +24,10 @@ public class ResultDTO<T> {
         resultDto.setData(data);
         return resultDto;
     }
+    public static <T> ResultDTO<T> success(){
+        ResultDTO<T> resultDto = new ResultDTO<T>(CodeMsgEnum.SUCCESS);
+        return resultDto;
+    }
 
     public static ResultDTO error(CodeMsgEnum codeMsg){
         return new ResultDTO(codeMsg);
