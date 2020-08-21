@@ -4,7 +4,7 @@ import com.clh.seckill.redis.KeyPrefix;
 import com.clh.seckill.util.BeanUtil;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisSentinelPool;
 
 import javax.annotation.Resource;
 
@@ -17,7 +17,7 @@ import javax.annotation.Resource;
 public class RedisService {
 
     @Resource
-    private JedisPool jedisPool;
+    private JedisSentinelPool jedisPool;
 
     /**
      * 获取对象

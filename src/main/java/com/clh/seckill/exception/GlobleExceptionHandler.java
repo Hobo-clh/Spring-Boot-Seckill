@@ -1,6 +1,7 @@
 package com.clh.seckill.exception;
 
 import com.clh.seckill.dto.ResultDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -16,10 +17,11 @@ import java.util.List;
  **/
 @ControllerAdvice
 @ResponseBody
+@Slf4j
 public class GlobleExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
-    public ResultDTO<String> exceptionHandler(HttpServletRequest request,Exception e){
+    public Object exceptionHandler(HttpServletRequest request,Exception e){
         if (e instanceof GlobleException) {
             GlobleException e1 = (GlobleException) e;
             CodeMsgEnum codeMsg = e1.getCodeMsg();
@@ -31,6 +33,9 @@ public class GlobleExceptionHandler {
             String message = error.getDefaultMessage();
             return ResultDTO.error(CodeMsgEnum.BIND_ERROR,message);
         } else {
+            e.printStackTrace();
+            log.error(e.getMessage());
+            log.error(e.getCause().getMessage());
             return ResultDTO.error(CodeMsgEnum.SERVER_ERROR);
         }
     }

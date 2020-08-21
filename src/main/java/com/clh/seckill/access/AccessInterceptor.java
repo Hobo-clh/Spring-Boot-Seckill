@@ -30,16 +30,15 @@ public class AccessInterceptor extends HandlerInterceptorAdapter {
     @Resource
     private RedisService redisService;
 
-    private static final Integer LIMIT_COUNT = 5;
-
     /**
      * 针对AccessLimit注解类的拦截器
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        User user = userService.getUser(request, response);
+        setSession(user, request);
         if (handler instanceof HandlerMethod) {
             HandlerMethod hm = (HandlerMethod) handler;
-            User user = userService.getUser(request, response);
             UserContext.setUser(user);
             AccessLimit accessLimit = hm.getMethodAnnotation(AccessLimit.class);
             if (accessLimit == null) {
@@ -70,6 +69,14 @@ public class AccessInterceptor extends HandlerInterceptorAdapter {
             }
         }
         return true;
+    }
+
+    private static String USER = "user";
+
+    private void setSession(User user, HttpServletRequest request) {
+        if (user != null && request.getSession().getAttribute(USER) != null) {
+            request.getSession().setAttribute("user", user);
+        }
     }
 
     /**

@@ -22,8 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
     private UserArgumentResolver userArgumentResolver;
     @Resource
     private AccessInterceptor accessInterceptor;
-    @Resource
-    private CookieInterceptor cookieInterceptor;
+
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(userArgumentResolver);
@@ -32,7 +31,6 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(accessInterceptor);
-        registry.addInterceptor(cookieInterceptor).addPathPatterns("/login");
     }
 
     @Override

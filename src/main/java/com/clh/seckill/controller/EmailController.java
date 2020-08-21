@@ -3,6 +3,7 @@ package com.clh.seckill.controller;
 import com.clh.seckill.access.AccessLimit;
 import com.clh.seckill.dto.ResultDTO;
 import com.clh.seckill.exception.CodeMsgEnum;
+import com.clh.seckill.log.AopLog;
 import com.clh.seckill.model.User;
 import com.clh.seckill.service.EmailService;
 import com.clh.seckill.service.UserService;
@@ -37,6 +38,8 @@ public class EmailController {
         emailService.sendCode(email, user);
         return ResultDTO.success();
     }
+
+    @AopLog()
     @AccessLimit(seconds = 60,maxCount = 10)
     @PostMapping("/verify_code")
     public ResultDTO verifyCode(String email, User user, String code) {

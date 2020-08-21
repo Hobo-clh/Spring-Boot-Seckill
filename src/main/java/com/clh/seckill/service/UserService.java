@@ -68,7 +68,7 @@ public class UserService {
      */
     public boolean updatePwd(String token, Long id, String passwordNew) {
         //取缓存
-        User user = redisService.get(UserKey.getById, String.valueOf(id), User.class);
+        User user = findById(id);
         if (user == null) {
             throw new GlobleException(CodeMsgEnum.MOBILE_IS_NOT_EXIST);
         }

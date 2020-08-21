@@ -3,6 +3,7 @@ package com.clh.seckill.controller;
 import com.clh.seckill.access.AccessLimit;
 import com.clh.seckill.dto.GoodsDetailDTO;
 import com.clh.seckill.dto.ResultDTO;
+import com.clh.seckill.log.AopLog;
 import com.clh.seckill.model.GoodsExtend;
 import com.clh.seckill.model.User;
 import com.clh.seckill.redis.GoodsKey;
@@ -70,7 +71,7 @@ public class GoodsController {
     //     return html;
     // }
 
-
+    @AopLog(detail = "nb")
     @AccessLimit(seconds = 60, maxCount = 2000, needLogin = false)
     @GetMapping(value = "/goods_list")
     public String goodsPage2(HttpServletRequest request,

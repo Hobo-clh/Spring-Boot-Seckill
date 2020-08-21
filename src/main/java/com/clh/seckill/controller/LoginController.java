@@ -2,6 +2,8 @@ package com.clh.seckill.controller;
 
 import com.clh.seckill.dto.ResultDTO;
 import com.clh.seckill.dto.UserDTO;
+import com.clh.seckill.log.AopLog;
+import com.clh.seckill.log.OperationUnit;
 import com.clh.seckill.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -21,6 +23,7 @@ import javax.validation.Valid;
  **/
 @Slf4j
 @Controller
+@AopLog(detail = "[{{userDTO}}]用户登录",level = 3,operationUnit = OperationUnit.USER)
 public class LoginController {
 
     @Resource

@@ -29,7 +29,6 @@ public class EmailService {
         String content = "【秒杀小商城】欢迎您绑定邮箱账号，您的验证码为:" + code + "，请在5分钟内完成绑定。";
         redisService.set(UserKey.byEmail, user.getId() + "_" + email, code);
         emailUtil.sendEmail(email, title, content);
-
     }
 
     public boolean verifyCode(String email, User user, String code) {
@@ -45,7 +44,7 @@ public class EmailService {
         return a;
     }
 
-    public void sendSeckillSucess(String email, GoodsExtend goodsExtend) {
+    public void sendSeckillSuccess(String email, GoodsExtend goodsExtend) {
         String title = "【秒杀小商城】恭喜您，秒杀成功！";
         Double seckillPrice = goodsExtend.getSeckillPrice();
         Double goodsPrice = goodsExtend.getGoodsPrice();

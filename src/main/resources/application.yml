@@ -77,17 +77,20 @@ spring:
           socketFactory:
             class: javax.net.ssl.SSLSocketFactory
             port: 465
+  #启动aop配置
+  aop:
+    auto: true
 # ----Redis配置----
 redis:
   #  host: 192.168.16.248
-  host: localhost
-  port: 6379
+#  host: localhost
+#  port: 6379
   timeout: 10
   # password: 123456
   poolMaxTotal: 1000
   poolMaxIdle: 500
   poolMaxWait: 3
-
+  sentinel:
 # 自定义变量
 customize:
   sender: longhuahobo@foxmail.com

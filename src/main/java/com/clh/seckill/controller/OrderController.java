@@ -1,7 +1,6 @@
 package com.clh.seckill.controller;
 
 import com.clh.seckill.access.AccessLimit;
-import com.clh.seckill.cache.MapCache;
 import com.clh.seckill.dto.OrderDetailDTO;
 import com.clh.seckill.dto.ResultDTO;
 import com.clh.seckill.exception.CodeMsgEnum;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 
 /**
  * @author: LongHua
@@ -25,19 +25,20 @@ import javax.annotation.Resource;
 @Controller
 @RequestMapping("/order")
 public class OrderController {
+    public static HashMap<Long, OrderDetailDTO> cacheMap = new HashMap(16);
 
     @Resource
     private OrderService orderService;
     @Resource
     private GoodsService goodsService;
 
-    @AccessLimit(seconds = 10,maxCount = 5)
+    @AccessLimit(seconds = 10, maxCount = 5)
     @GetMapping("/detail/{orderId}")
     @ResponseBody
     public ResultDTO getSeckillOrderById(@PathVariable("orderId") Long id,
-                                         User user){
+                                         User user) {
         //先从缓存中查找
-        OrderDetailDTO orderDetailDTO = MapCache.cacheMap.get(id);
+        OrderDetailDTO orderDetailDTO = cacheMap.get(id);
         //查找到直接返回
         if (orderDetailDTO != null) {
             return ResultDTO.success(orderDetailDTO);
@@ -54,7 +55,7 @@ public class OrderController {
                 .orderInfo(orderInfo)
                 .user(user)
                 .build();
-        MapCache.cacheMap.put(orderInfo.getId(),detailDTO);
+        cacheMap.put(orderInfo.getId(), detailDTO);
         return ResultDTO.success(detailDTO);
     }
 }

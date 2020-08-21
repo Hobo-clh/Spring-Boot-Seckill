@@ -161,9 +161,7 @@
     }
 
 
-    $(function () {
-        getDetail();
-    })
+
 
     function getDetail() {
         let goodsId = g_getQueryString("goodsId");
@@ -207,10 +205,10 @@
         $("#userId").text(user.id);
         countDown();
     }
-
     $(function () {
-        countDown();
+        getDetail();
     });
+
 
     function countDown() {
         //秒杀还没开始

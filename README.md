@@ -54,9 +54,10 @@
 
 - 内存标记减少对Redis的访问
 
-##### 6、RabbitMQ实现异步下单
+##### 6、RabbitMQ实现异步下单、通知
 
 - RabbitMQ队列缓冲，异步下单，增强用户体验
+- 异步通知，整合email，发送秒杀成功邮件
 - 客户端使用js轮询检查是否秒杀成功
 
 ##### 7、秒杀接口地址隐藏
@@ -91,8 +92,6 @@
     @ResponseBody
     public ResultDTO goodsDetail(User user, @PathVariable("goodsId") long goodsId) {...}
 ```
-
-
 
 
 

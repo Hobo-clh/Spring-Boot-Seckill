@@ -67,7 +67,7 @@ public class MQReceiver {
         if (stockCount <= 0) {
             return;
         }
-        emailService.sendSeckillSucess(email,goodsExtend);
+        emailService.sendSeckillSuccess(email,goodsExtend);
     }
 
 
