@@ -53,7 +53,7 @@ public class VerifyCodeUtil {
         // 生成随机码
         String verifyCode = generateVerifyCode(rdm);
         g.setColor(new Color(0, 100, 0));
-        g.setFont(new Font("Candara", Font.BOLD, 24));
+        g.setFont(new Font("Candara", Font.BOLD, 20));
         g.drawString(verifyCode, 8, 24);
         g.dispose();
         //把验证码存到redis中

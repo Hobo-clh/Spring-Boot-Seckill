@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.regex.Pattern;
 
 /**
@@ -29,7 +30,7 @@ public class EmailController {
     @Resource
     private UserService userService;
 
-    @AccessLimit(seconds = 60,maxCount = 2)
+    @AccessLimit(seconds = 60, maxCount = 2)
     @PostMapping("/send_email")
     public ResultDTO sendEmail(String email, User user) {
         if (!pattern.matcher(email).matches()) {
@@ -40,12 +41,10 @@ public class EmailController {
     }
 
     @AopLog()
-    @AccessLimit(seconds = 60,maxCount = 10)
+    @AccessLimit(seconds = 60, maxCount = 10)
     @PostMapping("/verify_code")
-    public ResultDTO verifyCode(String email, User user, String code) {
-        if (user == null) {
-            return ResultDTO.error(CodeMsgEnum.SESSION_ERROR);
-        }
+    public ResultDTO verifyCode(String email, User user, String code, HttpServletRequest request) {
+
         if (StringUtils.isEmpty(email) || StringUtils.isEmpty(code)) {
             return ResultDTO.error(CodeMsgEnum.EMAIL_OR_CODE_EMPTY);
         }
@@ -58,7 +57,7 @@ public class EmailController {
         //验证成功后将其绑定
         user.setEmail(email);
         try {
-            userService.updateUser(user);
+            userService.updateUser(user, request);
         } catch (DuplicateKeyException e) {
             //如果出现
             return ResultDTO.error(CodeMsgEnum.EMAIL_HAS_BEEN_USED);

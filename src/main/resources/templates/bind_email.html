@@ -25,6 +25,11 @@
 </body>
 </html>
 <script>
+
+    $(function () {
+        getUser();
+    });
+
     function getCode() {
         let email = $("#email").val();
         if (email == null || email === "") {

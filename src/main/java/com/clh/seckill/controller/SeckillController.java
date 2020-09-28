@@ -17,7 +17,6 @@ import com.clh.seckill.service.RedisService;
 import com.clh.seckill.service.SeckillService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,9 +27,9 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author: LongHua
@@ -39,8 +38,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 @Controller
 @RequestMapping("/seckill")
-public class SeckillController implements InitializingBean {
-
+public class SeckillController{
+    AtomicBoolean atomicBoolean;
     @Resource
     private GoodsService goodsService;
     @Resource
@@ -52,27 +51,7 @@ public class SeckillController implements InitializingBean {
     @Resource
     private MQSender sender;
 
-    private Map<Long, Boolean> localOverMap = new ConcurrentHashMap<>(16);
-
-
-    /**
-     * 系统初始化时将库存放入至缓存中
-     */
-    @Override
-    public void afterPropertiesSet() {
-        List<GoodsExtend> goodsExtends = goodsService.listGoodsExtend();
-        if (goodsExtends == null || goodsExtends.size() == 0) {
-            return;
-        }
-        for (GoodsExtend goodsExtend : goodsExtends) {
-            redisService.set(GoodsKey.getSeckillGoodsStock, goodsExtend.getId() + "", goodsExtend.getStockCount());
-            if (goodsExtend.getStockCount() > 0) {
-                localOverMap.put(goodsExtend.getId(), false);
-            } else {
-                localOverMap.put(goodsExtend.getId(), true);
-            }
-        }
-    }
+    public static Map<Long, Boolean> localOverMap = new ConcurrentHashMap<>(16);
 
     /**
      * 秒杀
@@ -105,7 +84,7 @@ public class SeckillController implements InitializingBean {
             model.addAttribute("errorMsg", CodeMsgEnum.SECKILL_STOCK_EMPTY.getMsg());
             return "seckill_fail";
         }
-
+        atomicBoolean.get();
         model.addAttribute("orderInfo", orderInfo);
         model.addAttribute("goods", goods);
         return "order_detail";

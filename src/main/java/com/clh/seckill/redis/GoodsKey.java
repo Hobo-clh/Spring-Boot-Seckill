@@ -6,7 +6,10 @@ package com.clh.seckill.redis;
  **/
 public class GoodsKey extends BasePrefix {
 
-    private static final int EXPIRE = 60;
+    /**
+     * 6小时
+     */
+    private static final int EXPIRE = 60 * 60 * 6;
 
     private GoodsKey(int expireSeconds, String prefix) {
         super(expireSeconds, prefix);

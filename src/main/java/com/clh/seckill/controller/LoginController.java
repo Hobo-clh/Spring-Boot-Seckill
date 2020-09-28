@@ -2,8 +2,8 @@ package com.clh.seckill.controller;
 
 import com.clh.seckill.dto.ResultDTO;
 import com.clh.seckill.dto.UserDTO;
-import com.clh.seckill.log.AopLog;
-import com.clh.seckill.log.OperationUnit;
+import com.clh.seckill.exception.CodeMsgEnum;
+import com.clh.seckill.model.User;
 import com.clh.seckill.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -23,7 +23,6 @@ import javax.validation.Valid;
  **/
 @Slf4j
 @Controller
-@AopLog(detail = "[{{userDTO}}]用户登录",level = 3,operationUnit = OperationUnit.USER)
 public class LoginController {
 
     @Resource
@@ -32,6 +31,11 @@ public class LoginController {
     @GetMapping("/to_login")
     public String loginPage() {
         return "login";
+    }
+
+    @GetMapping("/person")
+    public String goEmail() {
+        return "bind_email";
     }
 
     @PostMapping("/login")
@@ -44,14 +48,16 @@ public class LoginController {
 
     @GetMapping("/logout")
     @ResponseBody
-    public ResultDTO quit(HttpServletResponse response, HttpServletRequest request) {
+    public ResultDTO logout(HttpServletResponse response, HttpServletRequest request) {
         response.addCookie(new Cookie(UserService.COOKIE_NAME_TOKEN, null));
         request.getSession().removeAttribute("user");
         return ResultDTO.success();
     }
 
-    @GetMapping("/person")
-    public String quit() {
-        return "bind_email";
+
+    @GetMapping("/token")
+    @ResponseBody
+    public ResultDTO getUserByToken(User user) {
+        return user == null ? ResultDTO.error(CodeMsgEnum.SESSION_ERROR) : ResultDTO.success(user);
     }
 }

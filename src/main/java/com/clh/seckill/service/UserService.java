@@ -53,13 +53,13 @@ public class UserService {
      */
     public User findById(Long id) {
         //取缓存
-        User user = redisService.get(UserKey.getById, String.valueOf(id), User.class);
-        if (user != null) {
-            return user;
-        }
+        // User user = redisService.get(UserKey.getById, String.valueOf(id), User.class);
+        // if (user != null) {
+        //     return user;
+        // }
         //缓存中没有就取数据库
         User dbUser = userMapper.findById(id);
-        redisService.set(UserKey.getById, "" + id, dbUser);
+        // redisService.set(UserKey.getById, "" + id, dbUser);
         return dbUser;
     }
 
@@ -84,7 +84,6 @@ public class UserService {
         return true;
     }
 
-
     public String login(UserDTO userDTO, HttpServletResponse response, HttpServletRequest request) {
         if (userDTO == null) {
             throw new GlobleException(CodeMsgEnum.SERVER_ERROR);
@@ -104,7 +103,7 @@ public class UserService {
         user.setLastLoginDate(new Date());
         user.setLoginCount(1);
         try {
-            updateUser(user);
+            updateUser(user, request);
         } catch (Exception e) {
             log.error(e.getMessage());
         }
@@ -169,8 +168,13 @@ public class UserService {
         return i > 0;
     }
 
-    public boolean updateUser(User user) throws DuplicateKeyException {
-        return userMapper.updateUser(user) > 0;
+    public boolean updateUser(User user, HttpServletRequest request) throws DuplicateKeyException {
+        boolean flag = userMapper.updateUser(user) > 0;
+        if (flag) {
+            String token = getCookieValue(COOKIE_NAME_TOKEN, request);
+            redisService.set(UserKey.token, token, user);
+        }
+        return flag;
     }
 
 }

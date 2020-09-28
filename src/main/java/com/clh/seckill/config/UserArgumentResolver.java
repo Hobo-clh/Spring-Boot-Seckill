@@ -27,5 +27,4 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
         return UserContext.getUser();
     }
 
-
 }

@@ -8,7 +8,7 @@ spring:
   # ----数据源配置----
   datasource:
     url: jdbc:mysql://localhost:3306/hobo-seckill?serverTimezone=Asia/Shanghai&useAffectedRows=true
-    username: root
+    username:
     password:
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
@@ -41,10 +41,10 @@ spring:
 
   #-----Rabbitmq配置-----
   rabbitmq:
-    host: localhost
+    host: 192.168.16.106
     port: 5672
-    username: guest
-    password: guest
+    username:
+    password:
     virtual-host: /
     listener.simple.concurrency:  10
     listener.simple.max-concurrency:  10
@@ -82,15 +82,16 @@ spring:
     auto: true
 # ----Redis配置----
 redis:
-  #  host: 192.168.16.248
-#  host: localhost
-#  port: 6379
+#    host: 192.168.16.248
+  host: localhost
+  port: 6379
   timeout: 10
-  # password: 123456
+  # password:
   poolMaxTotal: 1000
   poolMaxIdle: 500
   poolMaxWait: 3
-  sentinel:
+#  sentinel: 47.115.1.148:26379
+#  sentinel: 192.168.16.248:26379
 # 自定义变量
 customize:
-  sender: longhuahobo@foxmail.com
+  sender:

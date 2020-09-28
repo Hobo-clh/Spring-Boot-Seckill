@@ -35,21 +35,21 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
-                <li th:if="${session.user==null}">
+                <li id="noUser">
                     <a id="nav-user" href="/to_login">登录</a>
                 </li>
 
-                <li th:if="${session.user!=null}" class="dropdown">
+                <li id="hasUser" class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"
                        role="button" aria-haspopup="true" aria-expanded="false">
-                        <span th:text="${session.user.nickname}"></span>
+                        <span id="userName"></span>
                         <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="/person">个人中心</a></li>
                         <li><a onclick="logout()">退出</a></li>
                     </ul>
                 </li>
-
+                <input type="hidden" id="user"/>
             </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->

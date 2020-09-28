@@ -62,73 +62,9 @@
 </div>
 </body>
 <script>
-
-    // function toSecKill() {
-    //     $.ajax({
-    //         type: "POST",
-    //         url: "/seckill/do_seckill",
-    //         data: {
-    //             goodsId: $('input[name="goodsId"]').val()
-    //         },
-    //         success: function (data) {
-    //             if (data.code === 200) {
-    //                 layer.msg("秒杀成功");
-    //                 window.location.href = "/order/detail";
-    //             } else {
-    //                 layer.msg(data.msg);
-    //             }
-    //         }
-    //     });
-    // }
-
     $(function () {
+        getUser();
         countDown();
     });
-
-    function countDown() {
-        //秒杀还没开始
-        let remainSeconds = $("#remainSeconds").val();
-        let timeout;
-        if (remainSeconds > 0) {
-            $("#buyButton").attr("disabled", true);
-            timeout = setTimeout(function () {
-                $("#countDown").text(remainSeconds - 1);
-                $("#remainSeconds").val(remainSeconds - 1);
-                countDown();
-            }, 1000);
-        } else if (remainSeconds == 0) {
-            $("#buyButton").attr("disabled", false);
-            $("#miaoshaTip").text("秒杀进行中");
-            if (timeout) {
-                clearTimeout(timeout);
-            }
-        } else {
-            $("#buyButton").attr("disabled", true);
-            $("#miaoshaTip").html("秒杀已经结束");
-        }
-    }
-
-    // function countDown() {
-    //     var remainSeconds = $("#remainSeconds").val();
-    //     var timeout;
-    //     if (remainSeconds > 0) {//秒杀还没开始，倒计时
-    //         $("#buyButton").attr("disabled", true);
-    //         timeout = setTimeout(function () {
-    //             $("#countDown").text(remainSeconds - 1);
-    //             $("#remainSeconds").val(remainSeconds - 1);
-    //             countDown();
-    //         }, 1000);
-    //     } else if (remainSeconds == 0) {//秒杀进行中
-    //         $("#buyButton").attr("disabled", false);
-    //         if (timeout) {
-    //             clearTimeout(timeout);
-    //         }
-    //         $("#miaoshaTip").html("秒杀进行中");
-    //     } else {//秒杀已经结束
-    //         $("#buyButton").attr("disabled", true);
-    //         $("#miaoshaTip").html("秒杀已经结束");
-    //     }
-    // }
-
 </script>
 </html>
